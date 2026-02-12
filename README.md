@@ -1,2 +1,2 @@
-# Master-s-Project
+# Master's-Project
 Spring 2026
