@@ -4,7 +4,7 @@ def cleaning_data(df):
     ''' This function cleans the data, filters by years I want to use, changes column names,
     Returns cleaned dataset.'''
     # clean_df = df.dropna(axis ='rows')
-    clean_df = df[df['Year'].isin([2018,2019,2021,2022])]
+    clean_df = df[df['Year'].isin([2019,2022])]
     clean_df = clean_df.rename({'DBN': 'dbn',
                                 'School Name': 'school_name',
                                 'Number Tested': "number_tested",
