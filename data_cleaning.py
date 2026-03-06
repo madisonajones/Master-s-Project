@@ -50,18 +50,20 @@ def merge_data_and_poverty(schooldata, povertydata):
     ''' Cleans poverty data, adjusts column names, merges with school level data. Returns merged dataframe.'''
 
     # clean poverty data, filter for 2018-19 school year, adjust column names
-    cols_to_keep = ['DBN','School Name','Year','% Poverty']
+    cols_to_keep = ['DBN','School Name','Year','% Poverty', 'Economic Need Index']
     povertydata_filtered = povertydata[
         (povertydata['Year'] == '2018-19')][cols_to_keep]
     
     # fix 0.95 value in poverty data
     povertydata_filtered['% Poverty'] = povertydata_filtered['% Poverty'].replace({'Above 95%':'0.95'})
+    povertydata_filtered['Economic Need Index'] = povertydata_filtered['Economic Need Index'].replace({'Above 95%':'0.95'})
 
     # rename for merge in school data
     schooldata= schooldata.rename(columns = {'Geographic Subdivision':'DBN'})
 
     # merge school & poverty data on DBN (school identifier)
-    merged = schooldata.merge(povertydata_filtered[['DBN', '% Poverty']],  # keep only needed columns
+    merged = schooldata.merge(povertydata_filtered[['DBN', '% Poverty', 'Economic Need Index']],  # keep only needed columns
+
                               on='DBN',
                               how='left')
     
@@ -75,3 +77,16 @@ def categorize_poverty(row):
     else:
         return '0'
     
+def categorize_title_i(row):
+    nyc_doe_titlei = 0.6
+    if row['% Poverty'] >= nyc_doe_titlei:
+        return '1'
+    else:
+        return '0'
+    
+def categorize_economic_need(row):
+    nyc_economic_need_index = 0.713
+    if row['Economic Need Index'] >= nyc_economic_need_index:
+        return '1'
+    else:
+        return '0'
