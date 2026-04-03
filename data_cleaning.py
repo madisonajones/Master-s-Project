@@ -40,35 +40,109 @@ def create_school_level_data(df):
     # filtering for school level data, all grades, all students
     df = df[
         (df['Report Category'].isin(['School'])) &
-        (df['Grade'] == 'All Grades') &
+        # (df['Grade'] == 'All Grades') 
         (df['Student Category'] == 'All Students')
     ]
     return df
 
 
+# def merge_data_and_poverty(schooldata, povertydata):
+#     ''' Cleans poverty data, adjusts column names, merges with school level data. Returns merged dataframe.'''
+
+#     # clean poverty data, filter for 2018-19 school year, adjust column names
+#     cols_to_keep = ['DBN','School Name','Year','% Poverty', 'Economic Need Index']
+#     povertydata_filtered = povertydata[
+#         (povertydata['Year'] == '2018-19')][cols_to_keep]
+    
+#     # fix 0.95 value in poverty data
+#     povertydata_filtered['% Poverty'] = povertydata_filtered['% Poverty'].replace({'Above 95%':'0.95'})
+#     povertydata_filtered['Economic Need Index'] = povertydata_filtered['Economic Need Index'].replace({'Above 95%':'0.95'})
+
+#     # rename for merge in school data
+#     schooldata= schooldata.rename(columns = {'Geographic Subdivision':'DBN'})
+
+#     # merge school & poverty data on DBN (school identifier)
+#     merged = schooldata.merge(povertydata_filtered[['DBN', '% Poverty', 'Economic Need Index']],  # keep only needed columns
+
+#                               on='DBN',
+#                               how='left')
+    
+#     return merged
+
+
+# def merge_data_and_poverty(schooldata, povertydata):
+#     ''' Cleans poverty data, adjusts column names, merges with school level data. Returns merged dataframe.'''
+
+#     # clean poverty data, filter for 2018-19 school year, adjust column names
+#     cols_to_keep = ['DBN','School Name','Year','% Poverty']
+
+#     povertydata_filtered = povertydata[
+#         (povertydata['Year'].isin(['2017-18', '2018-19', '2021-22']))][cols_to_keep].copy()
+    
+    
+#     # fix 0.95 value in poverty data
+#     povertydata_filtered['% Poverty'] = povertydata_filtered['% Poverty'].replace({'Above 95%':'0.95'})
+    
+   
+#     # year map
+#     year_map = {
+#         '2018': 2018,
+#         '2019': 2019,
+#         '2022': 2022
+#     }
+
+#     povertydata_filtered['Year'] = povertydata_filtered['Year'].map(year_map)
+
+#       # rename for merge in school data
+#     schooldata= schooldata.rename(columns = {'Geographic Subdivision':'DBN'})
+
+
+#     # merge school & poverty data on DBN (school identifier)
+#     merged = schooldata.merge(povertydata_filtered[['DBN', 'Year', '% Poverty']],  # keep only needed columns
+
+#                               on='DBN',
+#                               how='left')
+    
+#     return merged
+
+
 def merge_data_and_poverty(schooldata, povertydata):
-    ''' Cleans poverty data, adjusts column names, merges with school level data. Returns merged dataframe.'''
+    '''
+    Cleans poverty data, adjusts column names, merges with school level data by year. Returns merged dataframe.'''
+    
 
-    # clean poverty data, filter for 2018-19 school year, adjust column names
-    cols_to_keep = ['DBN','School Name','Year','% Poverty', 'Economic Need Index']
+    # filter
+    cols_to_keep = ['DBN', 'School Name', 'Year', '% Poverty']
+
     povertydata_filtered = povertydata[
-        (povertydata['Year'] == '2018-19')][cols_to_keep]
-    
-    # fix 0.95 value in poverty data
-    povertydata_filtered['% Poverty'] = povertydata_filtered['% Poverty'].replace({'Above 95%':'0.95'})
-    povertydata_filtered['Economic Need Index'] = povertydata_filtered['Economic Need Index'].replace({'Above 95%':'0.95'})
+        povertydata['Year'].isin(['2018', '2019', '2022'])  # ← matches what main script produces
+    ][cols_to_keep].copy()
 
-    # rename for merge in school data
-    schooldata= schooldata.rename(columns = {'Geographic Subdivision':'DBN'})
+    #  make "Above 95%" into 0.95 and convert to float
+    povertydata_filtered['% Poverty'] = (
+        povertydata_filtered['% Poverty']
+        .replace({'Above 95%': '0.95'})
+        .astype(float)
+    )
 
-    # merge school & poverty data on DBN (school identifier)
-    merged = schooldata.merge(povertydata_filtered[['DBN', '% Poverty', 'Economic Need Index']],  # keep only needed columns
+    # year types
+    povertydata_filtered['Year'] = povertydata_filtered['Year'].astype(str)
 
-                              on='DBN',
-                              how='left')
-    
+    # DBN column fix
+    if 'Geographic Subdivision' in schooldata.columns:
+        schooldata = schooldata.rename(columns={'Geographic Subdivision': 'DBN'})
+
+    # same data type for merge
+    schooldata['Year'] = schooldata['Year'].astype(str)
+
+    # merge
+    merged = schooldata.merge(
+        povertydata_filtered[['DBN', 'Year', '% Poverty']],
+        on=['DBN', 'Year'],   # ← fixed
+        how='left'
+    )
+
     return merged
-
 
 def categorize_poverty(row):
     nyc_poverty_percent = 0.74
