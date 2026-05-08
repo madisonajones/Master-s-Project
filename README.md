@@ -11,7 +11,7 @@ A cleaned and merged dataset is available in this repository as "cleaned_school_
 The goal of this project is to estimate the extent of pandemic disruptions on ELA achievement on impoverished communities. Disparities are investigated relative to pre-existing trends in ELA test scores. <br>
 
 #### Structure <br>
-This repository shows progress of my Master's Capstone. Files are labelled by week to monitor progress and demonstate the full end-to-end process for the project. Model results can be viewed in the 'Final_Modeling' Jupyter Notebook. The report can be viewed in the Final Products folder. <br>
+This repository shows progress of my Master's Capstone. Files are labelled by week to monitor progress and demonstate the full end-to-end process for the project. Model results can be viewed in the "Final_Modeling" Jupyter Notebook. HonestDiD analysis can be viewed in the honestdid_coefs_complete folder, which is complete with all necessary information (model coefficients & variance-covariance matrices) needed to run the code. The report can be viewed in the Final Products folder. <br>
 
 #### Package Requirements <br>
 
