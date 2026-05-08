@@ -11,7 +11,7 @@ A cleaned and merged dataset is available in this repository as "cleaned_school_
 The goal of this project is to estimate the extent of pandemic disruptions on ELA achievement on impoverished communities. Disparities are investigated relative to pre-existing trends in ELA test scores. <br>
 
 #### Structure <br>
-This repository shows progress of my Master's Capstone. Files are labelled by week to monitor progress and demonstate the full end-to-end process for the project. <br>
+This repository shows progress of my Master's Capstone. Files are labelled by week to monitor progress and demonstate the full end-to-end process for the project. Model results can be viewed in the 'Final_Modeling' Jupyter Notebook. <br>
 
 #### Package Requirements <br>
 
@@ -36,3 +36,8 @@ Before running the R file, please have the following packages installed:<br>
     - readxl<br>
     - stringr<br>
     - HonestDiD<br>
+
+
+Further information on the data can be viewed on the City of New York OpenData Website: <br>
+https://data.cityofnewyork.us/Education/English-Language-Arts-ELA-Test-Results-2013-2023/iebs-5yhr/about_data <br>
+https://data.cityofnewyork.us/Education/2017-18-2021-22-Demographic-Snapshot/c7ru-d68s/about_data
