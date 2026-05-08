@@ -76,7 +76,7 @@ vcov7 <- vcovs$vcov7
 vcov8 <- vcovs$vcov8
 
 
-
+# function to compute delta RM results for a given beta and covariance matrix
 delta_rm_results_func <- function(beta, sigma) {
   delta_rm_results <- createSensitivityResults_relativeMagnitudes(
     betahat = beta, #coefficients
@@ -89,19 +89,7 @@ delta_rm_results_func <- function(beta, sigma) {
 }
 
 
-g3 <- delta_rm_results_func(beta3, vcov3)
-g4 <- delta_rm_results_func(beta4, vcov4)
-
-
-for (i in 1:nrow(g3)) {
-  sig <- ifelse(g3$ub[i] < 0, "Yes", "No  <-- breaks here")
-  cat(sprintf("%-8.1f %-12.4f %-12.4f %-20s\n",
-              g3$Mbar[i],
-              g3$lb[i],
-              g3$ub[i],
-              sig))
-}
-
+# compute and print results for each grade model
 
 for (g in 3:8) {
   beta <- get(paste0("beta", g))
@@ -112,6 +100,7 @@ for (g in 3:8) {
   cat("\n")
 }
 
+# formatting results for better readability
 
 for (g in 3:8) {
   beta <- get(paste0("beta", g))
